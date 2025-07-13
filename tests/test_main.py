@@ -15,6 +15,7 @@ def test_root():
 
 def test_history_params(monkeypatch):
 
+
 def test_history(monkeypatch):
     import pandas as pd
     import yfinance as yf
@@ -34,6 +35,7 @@ def test_history(monkeypatch):
             called["period"] = period
             called["start"] = start
             called["end"] = end
+
 
     df = pd.DataFrame({"Date": [pd.Timestamp("2024-01-01")], "Close": [1]}).set_index("Date")
 
@@ -94,6 +96,43 @@ def test_history_include_extras(monkeypatch):
     data = response.json()
     assert data[0]["Dividends"] == 0.5
     assert data[0]["Stock Splits"] == 2
+
+
+def test_history_chart(monkeypatch):
+    import pandas as pd
+    import yfinance as yf
+    import mplfinance as mpf
+
+    df = pd.DataFrame(
+        {
+            "Date": [pd.Timestamp("2024-01-01")],
+            "Open": [1],
+            "High": [2],
+            "Low": [0.5],
+            "Close": [1.5],
+            "Volume": [100],
+            "Dividends": [0],
+            "Stock Splits": [0],
+        }
+    ).set_index("Date")
+
+    class DummyTicker:
+        def history(self, period="1y", start=None, end=None):
+            return df
+
+    monkeypatch.setattr(yf, "Ticker", lambda symbol: DummyTicker())
+
+    def dummy_plot(data, type="candle", style="charles", volume=True, savefig=None):
+        if savefig is not None:
+            savefig.write(b"img")
+
+    monkeypatch.setattr(mpf, "plot", dummy_plot)
+
+    response = client.get("/history/chart", params={"symbol": "TEST"})
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "image/png"
+    assert response.content == b"img"
+
     response = client.get("/history/TEST")
     assert response.status_code == 200
     assert called["period"] == "1y"

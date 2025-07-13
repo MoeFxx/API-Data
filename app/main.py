@@ -2,6 +2,11 @@ from datetime import date
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import Response
+import yfinance as yf
+import mplfinance as mpf
+import io
+=======
 import yfinance as yf
 
 app = FastAPI(title="Yahoo Finance History Service")
@@ -49,6 +54,40 @@ async def get_history(
         data = data.drop(columns=drop_cols)
 
     return data.to_dict(orient="records")
+
+
+@app.get("/history/chart")
+async def get_history_chart(
+    symbol: str,
+    timeframe: str = "1y",
+    start: Optional[date] = None,
+    end: Optional[date] = None,
+    include_dividends: bool = False,
+    include_splits: bool = False,
+):
+    """Return a candlestick chart PNG for ``symbol``."""
+    try:
+        data = yf.Ticker(symbol).history(
+            period=timeframe,
+            start=start,
+            end=end,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+    drop_cols = []
+    if not include_dividends and "Dividends" in data.columns:
+        drop_cols.append("Dividends")
+    if not include_splits and "Stock Splits" in data.columns:
+        drop_cols.append("Stock Splits")
+    if drop_cols:
+        data = data.drop(columns=drop_cols)
+
+    buf = io.BytesIO()
+    mpf.plot(data, type="candle", style="charles", volume=True, savefig=buf)
+    buf.seek(0)
+    return Response(content=buf.read(), media_type="image/png")
+
 @app.get("/history/{symbol}")
 async def get_history(symbol: str):
     """Return 1-year historical price data for ``symbol``."""

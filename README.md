@@ -34,6 +34,12 @@ Query parameters:
 - `start` / `end` (optional): date range in `YYYY-MM-DD` format.
 - `include_dividends` and `include_splits` (optional): include those columns when set to `true`.
 
+The service also provides `/history/chart`, which returns a candlestick chart as a PNG image using the same query parameters.
+
+```bash
+curl 'http://localhost:8000/history/chart?symbol=MSFT&timeframe=1mo'
+```
+=======
 Then visit `http://localhost:8000/history/MSFT` to fetch Microsoft stock history for the last year.
 
 The microservice always returns one year of historical data for the requested ticker.
