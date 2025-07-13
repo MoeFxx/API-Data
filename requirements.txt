@@ -4,3 +4,7 @@ yfinance
 pytest
 httpx<0.28
 mplfinance
+
+httpx
+mplfinance
+

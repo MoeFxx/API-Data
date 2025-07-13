@@ -50,6 +50,11 @@ ENV/
 .cache/
 .pytest_cache/
 
+
+
+.pytest_cache/
+
+
 # VSCode
 .vscode/
 

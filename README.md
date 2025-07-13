@@ -36,9 +36,17 @@ Query parameters:
 
 The service also provides `/history/chart`, which returns a high-definition candlestick chart as a PNG image using the same query parameters. The chart is rendered in a dark theme and sized for a 1080p resolution.
 
+The service also provides `/history/chart`, which returns a candlestick chart as a PNG image using the same query parameters.
+
+
 ```bash
 curl 'http://localhost:8000/history/chart?symbol=MSFT&timeframe=1mo'
 ```
+
+
+Then visit `http://localhost:8000/history/MSFT` to fetch Microsoft stock history for the last year.
+
+The microservice always returns one year of historical data for the requested ticker.
 
 ## Running tests
 
