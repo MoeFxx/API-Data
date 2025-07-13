@@ -49,6 +49,9 @@ ENV/
 # Pytest
 .cache/
 
+.pytest_cache/
+
+
 # VSCode
 .vscode/
 
