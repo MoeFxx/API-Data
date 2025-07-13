@@ -40,6 +40,10 @@ The service also provides `/history/chart`, which returns a candlestick chart as
 curl 'http://localhost:8000/history/chart?symbol=MSFT&timeframe=1mo'
 ```
 
+Then visit `http://localhost:8000/history/MSFT` to fetch Microsoft stock history for the last year.
+
+The microservice always returns one year of historical data for the requested ticker.
+
 ## Running tests
 
 ```bash
