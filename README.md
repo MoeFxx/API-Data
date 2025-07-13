@@ -34,6 +34,10 @@ Query parameters:
 - `start` / `end` (optional): date range in `YYYY-MM-DD` format.
 - `include_dividends` and `include_splits` (optional): include those columns when set to `true`.
 
+Then visit `http://localhost:8000/history/MSFT` to fetch Microsoft stock history for the last year.
+
+The microservice always returns one year of historical data for the requested ticker.
+
 ## Running tests
 
 ```bash

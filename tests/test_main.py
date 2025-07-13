@@ -14,6 +14,8 @@ def test_root():
     assert response.json()["message"].startswith("Yahoo Finance")
 
 def test_history_params(monkeypatch):
+
+def test_history(monkeypatch):
     import pandas as pd
     import yfinance as yf
 
@@ -32,6 +34,12 @@ def test_history_params(monkeypatch):
             called["period"] = period
             called["start"] = start
             called["end"] = end
+
+    df = pd.DataFrame({"Date": [pd.Timestamp("2024-01-01")], "Close": [1]}).set_index("Date")
+
+    class DummyTicker:
+        def history(self, period="1y"):
+            called["period"] = period
             return df
 
     monkeypatch.setattr(yf, "Ticker", lambda symbol: DummyTicker())
@@ -86,3 +94,8 @@ def test_history_include_extras(monkeypatch):
     data = response.json()
     assert data[0]["Dividends"] == 0.5
     assert data[0]["Stock Splits"] == 2
+    response = client.get("/history/TEST")
+    assert response.status_code == 200
+    assert called["period"] == "1y"
+    data = response.json()
+    assert data[0]["Close"] == 1
