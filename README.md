@@ -22,25 +22,7 @@ uvicorn app.main:app --reload
 
 Then visit `http://localhost:8000/history/MSFT` to fetch Microsoft stock history for the last year.
 
-The `/history/{symbol}` endpoint accepts optional query parameters:
-
-* `period` - history period accepted by Yahoo Finance (default `1y`)
-* `include_dividends` - set to `true` to include dividend data
-* `include_splits` - set to `true` to include stock split data
-
-Dividends and split columns are omitted by default.
-
-Example fetching the last month of data and including dividends:
-
-```bash
-curl "http://localhost:8000/history/MSFT?period=1mo&include_dividends=true"
-```
-
-Example including both dividends and splits:
-
-```bash
-curl "http://localhost:8000/history/MSFT?period=1mo&include_dividends=true&include_splits=true"
-```
+The microservice always returns one year of historical data for the requested ticker.
 
 ## Running tests
 
