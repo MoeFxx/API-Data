@@ -123,6 +123,15 @@ def test_history_chart(monkeypatch):
 
     monkeypatch.setattr(yf, "Ticker", lambda symbol: DummyTicker())
 
+    def dummy_plot(data, *args, **kwargs):
+        savefig = kwargs.get("savefig")
+        if isinstance(savefig, dict):
+            save_target = savefig.get("fname")
+        else:
+            save_target = savefig
+        if hasattr(save_target, "write"):
+            save_target.write(b"img")
+=======
     def dummy_plot(data, type="candle", style="charles", volume=True, savefig=None):
         if savefig is not None:
             savefig.write(b"img")
@@ -133,6 +142,7 @@ def test_history_chart(monkeypatch):
     assert response.status_code == 200
     assert response.headers["content-type"] == "image/png"
     assert response.content == b"img"
+
 
 
     response = client.get("/history/TEST")

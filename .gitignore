@@ -48,6 +48,9 @@ ENV/
 
 # Pytest
 .cache/
+.pytest_cache/
+
+
 
 .pytest_cache/
 

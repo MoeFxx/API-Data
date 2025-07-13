@@ -34,11 +34,15 @@ Query parameters:
 - `start` / `end` (optional): date range in `YYYY-MM-DD` format.
 - `include_dividends` and `include_splits` (optional): include those columns when set to `true`.
 
+The service also provides `/history/chart`, which returns a high-definition candlestick chart as a PNG image using the same query parameters. The chart is rendered in a dark theme and sized for a 1080p resolution.
+
 The service also provides `/history/chart`, which returns a candlestick chart as a PNG image using the same query parameters.
+
 
 ```bash
 curl 'http://localhost:8000/history/chart?symbol=MSFT&timeframe=1mo'
 ```
+
 
 Then visit `http://localhost:8000/history/MSFT` to fetch Microsoft stock history for the last year.
 

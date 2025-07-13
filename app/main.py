@@ -7,8 +7,6 @@ import yfinance as yf
 import mplfinance as mpf
 import io
 
-import yfinance as yf
-
 
 app = FastAPI(title="Yahoo Finance History Service")
 
@@ -85,6 +83,17 @@ async def get_history_chart(
         data = data.drop(columns=drop_cols)
 
     buf = io.BytesIO()
+    mpf.plot(
+        data,
+        type="candle",
+        style="yahoo",
+        volume=True,
+        figsize=(16, 9),
+        savefig={"fname": buf, "dpi": 120, "bbox_inches": "tight"},
+    )
+    buf.seek(0)
+    return Response(content=buf.read(), media_type="image/png")
+
     mpf.plot(data, type="candle", style="charles", volume=True, savefig=buf)
     buf.seek(0)
     return Response(content=buf.read(), media_type="image/png")
